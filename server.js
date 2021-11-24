@@ -2,7 +2,7 @@
 var express = require("express")
 var app = express()
 // Require database SCRIPT file
-var database = require("./database.js")
+var db = require("./database.js")
 
 // Require md5 MODULE
 
