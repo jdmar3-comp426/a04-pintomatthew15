@@ -2,7 +2,7 @@
 var express = require("express")
 var app = express()
 // Require database SCRIPT file
-var db = require("./database.js")
+var database = require("./database.js")
 
 // Require md5 MODULE
 
@@ -32,20 +32,20 @@ app.use("/app/new/", (req, res) =>
 {
 	const user = req.body.user;
 	const pass = md5(req.body.pass);
-	const stmt = db.prepare(`INSERT INTO userinfo (user, pass) VALUES (?, ?)`).run(user,pass);
-	res.status(201).json({"message": '1 record created: ID ${stmt.lastInsertRowid} (201)'});
+	const stmt = database.prepare(`INSERT INTO userinfo (user, pass) VALUES (?, ?)`).run(user,pass);
+	res.status(201).json({"message": `1 record created: ID ${stmt.lastInsertRowid} (201)`});
 });
 
 // READ a list of all users (HTTP method GET) at endpoint /app/users/
 app.use("/app/users/", (req, res) => {	
-	const stmt = db.prepare("SELECT * FROM userinfo").all();
+	const stmt = database.prepare("SELECT * FROM userinfo").all();
 	res.status(200).json(stmt);
 });
 
 // READ a single user (HTTP method GET) at endpoint /app/user/:id
 app.use("/app/user/:id", (req, res) => {	
 	const id = req.params.id;
-	const stmt = db.prepare(`SELECT * FROM userinfo WHERE id = ${id}`).all();
+	const stmt = database.prepare(`SELECT * FROM userinfo WHERE id = ${id}`).all();
 	res.status(200).json(stmt[0]);
 });
 // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
@@ -53,7 +53,7 @@ app.patch("/app/update/user/:id", (req, res) => {
 	const id = req.params.id;
 	const user = req.body.user;
 	const pass = md5(req.body.pass);
-	const stmt = db.prepare(`UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ${id}`).run(user, pass);
+	const stmt = database.prepare(`UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ${id}`).run(user, pass);
 	res.status(201).json({"message": `1 record updated: ID ${id} (200)`});
 });
 
@@ -61,7 +61,7 @@ app.patch("/app/update/user/:id", (req, res) => {
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
 app.delete("/app/delete/user/:id", (req, res) => {
 	const id = req.params.id;
-	const stmt = db.prepare(`DELETE FROM userinfo WHERE id = ?`).run(id);
+	const stmt = database.prepare(`DELETE FROM userinfo WHERE id = ?`).run(id);
 	res.status(200).json({"message": `1 record deleted: ID ${id} (200)`});
 });
 
