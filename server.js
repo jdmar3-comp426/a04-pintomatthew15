@@ -32,7 +32,7 @@ app.use("/app/new/", (req, res) =>
 {
 	const username = req.body.user;
 	const password = md5(req.body.pass);
-	const stmt = db.prepare('INSERT INTO userinfo (user, pass) VALUES (?, ?)').run(username,password);
+	const stmt = db.prepare(`INSERT INTO userinfo (user, pass) VALUES (?, ?)`).run(username,password);
 	res.status(201).json({"message": '1 record created: ID ${stmt.lastInsertRowid} (201)'});
 });
 
