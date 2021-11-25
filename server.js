@@ -6,7 +6,8 @@ var database = require("./database.js")
 
 // Require md5 MODULE
 
-var md5 = require("md5")
+var md5 = require("md5");
+//const db = require("./database.js");
 
 // Make Express use its own built-in body parser
 app.use(express.urlencoded({ extended: true }));
@@ -52,7 +53,7 @@ app.patch("/app/update/user/:id", (req, res) => {
 	const id = req.params.id;
 	const user = req.body.user;
 	const pass = md5(req.body.pass);
-	const stmt = database.prepare(`UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ${id}`).run(user, pass);
+	const stmt = db.prepare(`UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ${id}`).run(user, pass);
 	res.status(201).json({"message": `1 record updated: ID ${id} (200)`});
 });
 
